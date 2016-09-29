@@ -73,11 +73,18 @@ static void doIt(LPCTSTR arg_class, LPCTSTR arg_path)
 			{
 				if(arg_path)
 				{
-					wchar_t name[1025];
-					GetWindowModuleFileName(window, name, 1024);
-					if(!lstrcmpi(name, arg_path))
+					DWORD pid;
+					GetWindowThreadProcessId(window, &pid);
+					HANDLE h=OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, pid);
+					wchar_t name[MAX_PATH+1];
+					if(h)
 					{
-						break;
+						GetModuleFileNameEx(h, NULL, name, MAX_PATH);
+						CloseHandle(h); 
+						if(!lstrcmpi(name, arg_path))
+						{
+							break;
+						}
 					}
 				}else{
 					break;
@@ -117,7 +124,6 @@ int main(int argc, OPTARG_T argv[])
 					arg_class = optarg;
 				break;
 			case OPT_INFORMATION:
-			break;
 			default:
 				usage();
 		}

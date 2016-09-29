@@ -12,6 +12,8 @@
 #ifdef WIN32
 #include <stdio.h>
 #include <windows.h>
+#include "Psapi.h"
+#pragma comment(lib, "Psapi.lib")
 #define OPTARG_T wchar_t*
 #define main wmain
 #define NULL	0
